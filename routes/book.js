@@ -1,14 +1,17 @@
 import { Router } from 'express';
 const router = Router();
-import { create, getAll, getById, update, remove } from '../controllers/book.js';
+import auth from '../middlewares/auth.js';
+import multer from '../middlewares/multer-config.js';
+import * as book from '../controllers/book.js';
 
-router.post('/', create);
-router.get('/', getAll);
-router.get('/:id', getById);
-router.put('/:id', update);
-router.delete('/:id', remove);
+router.post('/', auth, multer, book.create);
+router.get('/', book.getAll);
 
-router.get('/bestrating');
-router.post('/:id/rating ');
+router.get('/bestrating', book.getBestRating);
+router.post('/:id/rating', auth, book.voteById);
+
+router.get('/:id', book.getById);
+router.put('/:id', auth, multer, book.update);
+router.delete('/:id', auth, book.remove);
 
 export default router;
