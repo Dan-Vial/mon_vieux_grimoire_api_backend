@@ -12,7 +12,12 @@ export async function create(req, res) {
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
       year: bookObect.year,
       genre: bookObect.genre,
-      ratings: [...bookObect.ratings],
+      ratings: [
+        {
+          userId: bookObect.ratings[0].userId,
+          grade: bookObect.ratings[0].grade
+        }
+      ],
       averageRating: bookObect.averageRating,
     })
 
@@ -20,6 +25,7 @@ export async function create(req, res) {
       await book.save()
       res.status(201).json({ message: 'Book Created' })
     } catch (error) {
+      console.log("zzz", error)
       res.status(400).json({ error })
     }
 
@@ -108,16 +114,10 @@ export async function remove(req, res) {
 
 export async function getBestRating(req, res) {
   try {
-    const books = await Book.find()
+    const books = await Book.find({}, null, { sort: { averageRating: -1 } }).limit(3)
+
     if (books === null) return res.status(404).json({ error: 'Books not found' });
-    let best3 = []
-
-    //to do algo 3 best book
-    books.forEach(book => {
-      best3.push(book)
-    });
-
-    return res.status(200).json(best3)
+    return res.status(200).json(books)
 
   } catch (error) {
     res.status(500).json({ error })
@@ -126,11 +126,16 @@ export async function getBestRating(req, res) {
 
 export async function voteById(req, res) {
   try {
-    //use findOneAndUpdate()
     const book = await Book.findOne({
       _id: req.params.id
     })
     if (book === null) return res.status(404).json({ error: 'Book not found' });
+
+    for (const rating of book.ratings) {
+      if (rating.userId === req.auth.userId) {
+        return res.status(401).json({ message: 'Already voted' });
+      }
+    }
 
     const ratingsObject = {
       ratings: [
@@ -139,11 +144,11 @@ export async function voteById(req, res) {
           userId: req.auth.userId,
           grade: req.body.rating
         }
-      ]
+      ],
+      averageRating: (book.averageRating + req.body.rating) / 2
     }
 
     await Book.updateOne({ _id: req.params.id }, { ...ratingsObject, _id: req.params.id })
-
     return res.status(200).json(await Book.findOne({
       _id: req.params.id
     }))
