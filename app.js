@@ -3,7 +3,8 @@ import { join, dirname } from "path";
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import 'dotenv/config'
+import compression from "compression";
+import 'dotenv/config';
 import './mongodb.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,8 @@ import bookRoutes from './routes/book.js';
 var app = express();
 
 app.use(logger('dev'));
+app.use(compression());
+
 app.use(json());
 app.use(urlencoded({ extended: false }));
 app.use(cookieParser());

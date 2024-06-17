@@ -25,7 +25,6 @@ export async function create(req, res) {
       await book.save()
       res.status(201).json({ message: 'Book Created' })
     } catch (error) {
-      console.log("zzz", error)
       res.status(400).json({ error })
     }
 
@@ -131,6 +130,7 @@ export async function voteById(req, res) {
     })
     if (book === null) return res.status(404).json({ error: 'Book not found' });
 
+    // book.ratings.findOne({req.auth.userId})
     for (const rating of book.ratings) {
       if (rating.userId === req.auth.userId) {
         return res.status(401).json({ message: 'Already voted' });
