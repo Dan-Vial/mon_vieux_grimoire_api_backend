@@ -32,7 +32,7 @@ export async function login(req, res) {
   try {
     const user = await User.findOne({ email: req.body.email })
     if (user === null) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(401).json({ error: 'Not Authorized' });
     } else {
       const valid = await compare(req.body.password, user.password)
 

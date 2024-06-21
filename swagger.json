@@ -1,0 +1,238 @@
+"paths": {
+  "/auth/login": {
+    "post": {
+      "summary": "Log In the user.",
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "responses": "200": "description": "Connected""content": "application/json": "schema": "type": "object""properties": "userId": "type": "integer""format": "int64""example": 1
+                  "token": "type": "string""example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY1MTg3NDkzOSwiZXhwIjoxNjUxOTYxMzM5fQ.JGN1p8YIfR-M-5eQ-Ypy6Ima5cKA4VbfL2xMr2MgHm4""404": {
+        "description": "User not found"
+      },
+      "401": {
+        "description": "Not Authorized"
+      }
+    }
+  },
+  "/auth/signup": {},
+  "/books": {
+    "get": {
+      "summary": "Récupérer une liste de livres",
+      "responses": {
+        "200": {
+          "description": "Une liste de livres",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/book"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "summary": "Créer un nouvel livre",
+      "requestBody": {
+        "description": "Livre à créer",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/book"
+            }
+          }
+        }
+      },
+      "responses": {
+        "201": {
+          "description": "Article créé avec succès",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/books/{id}": {
+    "get": {
+      "summary": "Récupérer un article par ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "ID de l'article"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Détails de l'article",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Article non trouvé"
+        }
+      }
+    },
+    "put": {
+      "summary": "Mettre à jour un article par ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "ID de l'article"
+        }
+      ],
+      "requestBody": {
+        "description": "Données de l'article à mettre à jour",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/book"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Article mis à jour avec succès",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/book"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Article non trouvé"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Supprimer un article par ID",
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "ID de l'article"
+        }
+      ],
+      "responses": {
+        "204": {
+          "description": "Article supprimé avec succès"
+        },
+        "404": {
+          "description": "Article non trouvé"
+        }
+      }
+    }
+  }
+},
+"components": {
+  "schemas": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "contact@localhost"
+        },
+        "password": {
+          "type": "string",
+          "example": "********"
+        }
+      }
+    },
+    "book": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "example": "identifiant MongoDB unique de l'utilisateur qui a créé le livre"
+        },
+        "title": {
+          "type": "string",
+          "example": "titre du livre"
+        },
+        "author": {
+          "type": "string",
+          "example": "auteur du livre"
+        },
+        "imageUrl": {
+          "type": "string",
+          "example": "url illustration/couverture du livre"
+        },
+        "year": {
+          "type": "Number",
+          "example": "année de publication du livre"
+        },
+        "genre": {
+          "type": "string",
+          "example": "genre du livre"
+        },
+        "ratings": [
+          {
+            "type": "array",
+            "example": {
+              "userId": {
+                "type": "string",
+                "example": "identifiant MongoDB unique de l'utilisateur qui a noté le livre"
+              },
+              "grade": {
+                "type": "Number",
+                "example": "note donnée à un livre"
+              }
+            }
+          }
+        ],
+        "averageRating": {
+          "type": "Number",
+          "example": "note moyenne du livre"
+        }
+      }
+    }
+  }
+}
+}

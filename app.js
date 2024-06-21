@@ -3,7 +3,10 @@ import { join, dirname } from "path";
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
-import compression from "compression";
+import compression from 'compression';
+import swaggerUi from 'swagger-ui-express';
+import yaml from 'yamljs';
+const swaggerDocument = yaml.load('swagger.yaml')
 import 'dotenv/config';
 import './mongodb.js';
 
@@ -33,5 +36,11 @@ app.use((req, res, next) => {
 app.use('/images', express.static(join(__dirname, 'images')));
 app.use('/api/auth', userRoutes);
 app.use('/api/books', bookRoutes);
+
+let options = {
+  explorer: true
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, options));
 
 export default app;

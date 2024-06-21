@@ -1,0 +1,319 @@
+openapi: 3.0.0
+info:
+  title: API Mon Vieux Grimoire
+  description: Ceci est une API pour la gestion et notation des livres, gestion des utilisateurs.
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000/api/
+    description: Serveur de dev.
+paths:
+
+###
+# login
+##
+  /auth/login:
+    post:
+      summary: Log In the user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        '200':
+          description: Connected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userConnected'
+        '404':
+          description: Not Authorized
+        '401':
+          description: Not Authorized
+###
+# signup
+##
+  /auth/signup:
+    post:
+      summary: Sig In the user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user'
+      responses:
+        '201':
+          description: User Created
+        '400':
+          description: Bad Request | Must have email and password
+        '500':
+          description: Internal Server Error
+
+###
+# books
+##
+  /books:
+    get:
+      summary: Returns all books
+      responses:
+        '200':
+          description: Returns an array of all books
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/books'
+        '404':
+          description: Book not found
+        '500':
+          description: Unexpected Error
+
+    post:
+      summary: Create new Book
+      security:
+       - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json: 
+            schema:
+              $ref: '#/components/schemas/book'
+      responses:
+        '201':
+          description: Book Created
+        '400':
+          description: Bad Request 
+        '500':
+          description: Unexpected Error
+
+  /books/{:id}:
+    get:
+      summary: Return book
+
+    put:
+      summary: Update Book
+      security:
+       - BearerAuth: []
+  
+    delete:
+      summary: Delete Book
+      security:
+       - BearerAuth: []
+
+# "post": {
+#         "summary": "Créer un nouvel livre",
+#         "requestBody": {
+#           "description": "Livre à créer",
+#           "required": true,
+#           "content": {
+#             "application/json": {
+#               "schema": {
+#                 "$ref": "#/components/schemas/book"
+#               }
+#             }
+#           }
+#         },
+#         "responses": {
+#           "201": {
+#             "description": "Article créé avec succès",
+#             "content": {
+#               "application/json": {
+#                 "schema": {
+#                   "$ref": "#/components/schemas/book"
+#                 }
+#               }
+#             }
+#           }
+#         }
+#       }
+
+
+
+  # /works:
+  #   get:
+  #     summary: Returns all works
+  #     responses:
+  #       '200':
+  #         description: Returns an array of all works
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 type: object
+  #                 properties:
+  #                   id:
+  #                     type: integer
+  #                     format: int64
+  #                     example: 1
+  #                   title:
+  #                     type: string
+  #                     example: "Abajour Tahina"
+  #                   imageUrl:
+  #                     type: string
+  #                     example: "http://localhost:5678/images/abajour-tahina1651286843956.png"
+  #                   categoryId:
+  #                     type: integer
+  #                     format: int64
+  #                     example: 1
+  #                   userId:
+  #                     type: integer
+  #                     format: int64
+  #                     example: 1
+  #                   category:
+  #                     type: object
+  #                     properties:
+  #                       id:
+  #                         type: integer
+  #                         format: int64
+  #                         example: 1
+  #                       name:
+  #                         type: string
+  #                         example: "Objets"
+  #       '500':
+  #         description: Unexpected Error
+  #   post:
+  #    summary: Send a new Work
+  #    security:
+  #      - BearerAuth: []
+
+  #    requestBody:
+  #      required: true
+  #      content:
+  #        multipart/form-data:
+  #          schema:
+  #            type: object
+  #            properties:
+  #              image:
+  #                type: string
+  #                format: binary
+  #              title:
+  #                type: string
+  #              category:
+  #                type: integer
+  #                format: int64
+  #    responses:
+  #      '201':
+  #        description: Created
+  #        content:
+  #          application/json:
+  #            schema:
+  #              type: object
+  #              properties:
+  #                id:
+  #                  type: integer
+  #                  format: int64
+  #                title:
+  #                  type: string
+  #                imageUrl:
+  #                  type: string
+  #                categoryId:
+  #                  type: string
+  #                userId:
+  #                  type: integer
+  #                  format: int64
+  #      '500':
+  #        description: Unexpected Error
+  #      '401':
+  #        description: Unauthorized
+  #      '400':
+  #        description: Bad Request
+  # /works/{id}:
+  #   delete:
+  #    summary: Delete a work depending on id
+  #    security:
+  #      - BearerAuth: []
+  #    parameters:
+  #      - name: id
+  #        in: path
+  #        required: true
+  #        description: id of work to be deleted
+  #        schema:
+  #          type: integer
+  #          format: int64
+  #          example: 1
+  #    responses:
+  #      '200':
+  #        description: Item Deleted
+  #      '401':
+  #        description: Unauthorized
+  #      '500':
+  #        description: Unexpected Behaviour
+
+components:
+  securitySchemes:
+   BearerAuth:
+     type: http
+     scheme: bearer
+
+  schemas:
+    user:
+      type: object
+      properties:
+        email:
+          type: string
+          example: test@test.fr
+        password:
+          type: string
+          example: test
+
+    rating:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: 66620675587f67afe0c5f08b
+        grade:
+          type: Number
+          example: 3
+        
+    book:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: 66620675587f67afe0c5f08b
+        title:
+          type: string
+          example: titre du livre
+        author:
+          type: string
+          example: auteur du livre
+        imageUrl:
+          type: string
+          example: https://via.placeholder.com/206x260
+        year:
+          type: Number
+          example: 2024
+        genre:
+          type: string
+          example: SF
+        ratings:
+          type: array
+          items:
+            $ref: '#/components/schemas/rating'
+        averageRating:
+          type: Number
+          example: 3
+
+    books:
+      type: array
+      items:
+        $ref: '#/components/schemas/book'
+
+    userConnected:
+      type: object
+      properties:
+        token: 
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NjYyMDY3NTU4N2Y2N2FmZTBjNWYwOGIiLCJpYXQiOjE3MTg2MzY4ODAsImV4cCI6MTcxODcyMzI4MH0.ucRSlVdPkyhi6njEbbqkBXNg6JVZS5Plw-1e4mKdjMI
+        userId: 
+          type: string
+          example: 66620675587f67afe0c5f08b
+
+securityDefinitions:
+  Bearer:
+    type: JWT
+    name: Authorization
+    in: header

@@ -77,6 +77,11 @@ export async function update(req, res) {
     if (book.userId != req.auth.userId) return res.status(401).json({ message: 'Not authorized' });
 
     try {
+      if (bookObject.imageUrl) {
+        const filename = book.imageUrl.split('/images/')[1];
+        await unlink(`images/${filename}`)
+      }
+
       await Book.updateOne({ _id: req.params.id }, { ...bookObject, _id: req.params.id })
       res.status(200).json({ message: 'Objet update' })
 
@@ -130,7 +135,6 @@ export async function voteById(req, res) {
     })
     if (book === null) return res.status(404).json({ error: 'Book not found' });
 
-    // book.ratings.findOne({req.auth.userId})
     for (const rating of book.ratings) {
       if (rating.userId === req.auth.userId) {
         return res.status(401).json({ message: 'Already voted' });
@@ -154,6 +158,7 @@ export async function voteById(req, res) {
     }))
 
   } catch (error) {
+    console.log(error)
     res.status(500).json({ error })
   }
 }

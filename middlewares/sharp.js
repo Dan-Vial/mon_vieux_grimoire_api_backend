@@ -2,6 +2,10 @@ import sharp from "sharp";
 
 export default async (req, res, next) => {
   try {
+    if (typeof req.file === 'undefined') {
+      return next();
+    }
+
     const MIME_TYPES = {
       'image/jpg': 'jpg',
       'image/jpeg': 'jpg',
