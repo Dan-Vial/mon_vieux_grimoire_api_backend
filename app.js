@@ -1,12 +1,12 @@
 import express, { json, urlencoded } from 'express';
-import { join, dirname } from "path";
+import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import compression from 'compression';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'yamljs';
-const swaggerDocument = yaml.load('swagger.yaml')
+const swaggerDocument = yaml.load('swagger.yaml');
 import 'dotenv/config';
 import './mongodb.js';
 

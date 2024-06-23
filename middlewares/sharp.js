@@ -1,4 +1,4 @@
-import sharp from "sharp";
+import sharp from 'sharp';
 
 export default async (req, res, next) => {
   try {
@@ -11,7 +11,7 @@ export default async (req, res, next) => {
       'image/jpeg': 'jpg',
       'image/png': 'png',
       'image/webp': 'webp',
-    }
+    };
 
     const { buffer, originalname, mimetype } = req.file;
     let extension = MIME_TYPES[mimetype];
@@ -30,4 +30,4 @@ export default async (req, res, next) => {
   } catch (error) {
     res.status(500).json({ error });
   }
-}
+};

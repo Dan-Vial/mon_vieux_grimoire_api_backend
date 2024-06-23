@@ -25,7 +25,7 @@ export const book = (req, res, next) => {
             genre: genre,
             year: year,
           })
-        }
+        };
       } else {
         req.body.title = title;
         req.body.author = author;
@@ -33,16 +33,16 @@ export const book = (req, res, next) => {
         req.body.year = year;
       }
 
-      next()
+      next();
     } else {
-      console.log(title, author, year, genre)
-      return res.status(400).json({ error: new Error("Bad Request") })
+      console.log(title, author, year, genre);
+      return res.status(400).json({ error: new Error('Bad Request') });
     }
   } catch (e) {
-    console.log(e)
-    return res.status(500).json({ error: new Error("Something wrong occured") })
+    console.log(e);
+    return res.status(500).json({ error: new Error('Something wrong occured') });
   }
-}
+};
 
 export const user = (req, res, next) => {
   try {
@@ -52,14 +52,14 @@ export const user = (req, res, next) => {
     if (email !== undefined && email.length > 0 && password !== undefined && password.length > 0) {
       req.body.email = email[0].trim();
       req.body.password = password;
-      next()
+      next();
     } else {
-      return res.status(400).json({ error: new Error("Bad Request") })
+      return res.status(400).json({ error: new Error('Bad Request') });
     }
   } catch (error) {
-    return res.status(500).json({ error: new Error("Something wrong occured") })
+    return res.status(500).json({ error: new Error('Something wrong occured') });
   }
-}
+};
 
 function isEmailValid(email) {
   return email.trim().toLowerCase()
@@ -69,7 +69,7 @@ function isEmailValid(email) {
 }
 
 function isPasswordValid(password) {
-  return //test quality password: length (min,max), complexity (alpha, num), ...
+  return; //test quality password: length (min,max), complexity (alpha, num), ...
 }
 
 //String.fromCharCode(ent.slice(2));
